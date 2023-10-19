@@ -1,3 +1,11 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:aee16684f0e48be535a2cbcbde9e234ace039801dfad74b7040734a33c63c959
-size 365
+{
+  "version": 2,
+  "builds": [
+    { "src": "index.js", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/api/recipes", "dest": "index.js" },
+    { "src": "/api/recipes/:id", "dest": "index.js" },
+    { "src": "/(.*)", "dest": "index.js" }
+  ]
+}
