@@ -1,0 +1,14 @@
+# Recipe Seeker - Progressive Web App
+
+# TEAM
+
+    Swastik Dan -- Developer -- @swastikdan
+
+# THANKS
+
+    Special thanks to all users of Recipe Seeker!
+
+# TECHNOLOGY COLOPHON
+
+    HTML5, CSS3, JavaScript (ES6)
+    Tailwind CSS, Express.js , Service Worker API

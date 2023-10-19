@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Recipe Seeker</title>
+  <meta name="description"
+    content="
+  Recipe Seeker is a web application built with Node.js and Express.js that allows users to search for recipes based on various criteria. It uses MongoDB to store and retrieve recipe data.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta property="og:title" content="Recipe Seeker">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://recipe-seekr.vercel.app/">
+  <meta property="og:image" content="https://ik.imagekit.io/swastik/tr:f-auto/Og_Image_Recipe_Seeker.png">
+  <meta name="google-site-verification" content="uHvrTYV7MI9jil_qDblV-QDi9qjXlpdb_8XJUtCLGLQ" />
+  <link rel="manifest" href="/site.webmanifest" crossorigin="use-credentials">
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="/apple-touch-icon.png" type="image/x-icon">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <meta name="theme-color" content="#fafafa">
+  <link rel="stylesheet" href="/src/css/style.css">
+  <style>
+  </style>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', async () => {
+        try {
+          const registration = await navigator.serviceWorker.register('/service-worker.js');
+        } catch (error) {
+          // console.error('Service Worker registration failed:', error);
+        }
+      });
+    }
+  </script>
+</head>
+
+<body class="font-maven items-center mx-auto dark:bg-gray-800 ">
+  <div id="preloader" style="position:fixed;overflow:hidden;width:100%;z-index:999" class="overflow-hidden">
+    <div
+      class="min-h-[100vh] flex flex-col bg-white border  dark:bg-gray-800 dark:border-gray-700 dark:shadow-slate-700/[.7] z-50 fi">
+      <div class="flex flex-auto flex-col justify-center items-center p-4 md:p-5">
+        <div class="flex justify-center">
+          <div
+            class="animate-spin inline-block w-14 h-14 md:w-20 md:h-20 border-[3.5px] border-current border-t-transparent text-blue-600 rounded-full"
+            role="status" aria-label="loading">
+            <span class="sr-only">Loading...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>var loader = document.getElementById("preloader"); window.addEventListener("load", function () { loader.style.display = "none"; });</script>
+  <nav
+    class="bg-gray-100 dark:bg-gray-900  w-full sticky top-0 left-0 border-b border-gray-200 dark:border-gray-600 z-20">
+    <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+      <a href="/" class="flex items-center w-20 bg-gray-100 dark:bg-gray-900 rounded-xl ">
+        <img width="56px" src="/apple-touch-icon.svg"
+          class=" mr-3 p-2 border border-black rounded-xl dark:border-gray-100" alt="Recipe Seeker">
+        <span class="self-center text-xl md:text-2xl font-black whitespace-nowrap dark:text-white">Recipe Seeker</span>
+      </a>
+      <div class="flex md:order-2 hs-tooltip">
+        <input data-hs-theme-switch
+          class="hs-tooltip-toggle relative w-[3.25rem] h-7 bg-gray-300 checked:bg-none checked:bg-green-600 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 border border-transparent ring-1 ring-transparent  focus:ring-slate-700 focus:outline-none appearance-none before:inline-block before:w-6 before:h-6 before:bg-white checked:before:bg-green-200 before:translate-x-0 checked:before:translate-x-full before:shadow before:rounded-full before:transform before:ring-0 before:transition before:ease-in-out before:duration-200 after:absolute after:right-1.5 after:top-[calc(50%-0.40625rem)] after:w-[.8125rem] after:h-[.8125rem] after:bg-no-repeat after:bg-[right_center] after:bg-[length:.8125em_.8125em] after:bg-[url('/moon-stars.svg')] checked:after:bg-[url('/brightness-high.svg')] after:transform after:transition-all after:ease-in-out after:duration-200 after:opacity-70 checked:after:left-1.5 checked:after:right-auto"
+          type="checkbox" id="darkSwitch" aria-label="Theme Toggle">
+        <span
+          class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-sm font-medium text-white rounded-md shadow-sm dark:bg-slate-700"
+          role="tooltip">
+          Theme Toggle
+        </span>
+      </div>
+    </div>
+  </nav>
+  <button id="back-to-top"
+    class="inline-block rounded-full bg-gray-200 hover:bg-white p-2 text-black dark:text-white shadow transition dark:bg-gray-600 dark:hover:bg-gray-950 border-2 border-black dark:border-white sm:p-3 lg:p-4 bottom-4 hidden right-4 fixed z-20">
+    <span class="sr-only">Back to top</span>
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+      <path fill-rule="evenodd"
+        d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z"
+        clip-rule="evenodd" />
+    </svg>
+  </button>
+  <main class="pt-5">
+    <form class=" p-6  items-center justify-center w-full mx-auto  max-w-screen-xl">
+      <div class="mb-4">
+        <label for="search" class="block text-gray-900 dark:text-gray-200 font-semibold mb-3 text-xl md:text-2xl">Search
+          Recipe</label>
+        <input type="text" id="search"
+          class="w-full border  py-2 px-3 focus:outline-none focus:border-gray-800 dark:focus:border-gray-100 placeholder-gray-900 dark:placeholder-gray-200 dark:bg-gray-600 dark:text-gray-100  rounded-xl bg-gray-100"
+          placeholder="Enter a recipe name" />
+      </div>
+      <div class="mx-auto text-center items-center md:pt-4 "><span
+          class="text-center mx-auto items-center text-gray-900 dark:text-gray-200 font-semibold  text-xl md:text-2xl ">Or</span>
+      </div>
+      <div class="mb-4">
+        <label for="ingredient"
+          class="block text-gray-900 dark:text-gray-200 font-semibold mb-3 text-xl md:text-2xl">Search
+          Ingredient</label>
+        <input type="text" id="ingredient"
+          class="w-full border  py-2 px-3 focus:outline-none focus:border-gray-800 dark:focus:border-gray-100 placeholder-gray-900 dark:placeholder-gray-200 dark:bg-gray-600 dark:text-gray-100  rounded-xl bg-gray-100"
+          placeholder="Enter an ingredient" />
+      </div>
+      <div class="mb-4">
+        <div class="flex space-x-2 hs-tooltip [--trigger:click]">
+          <label for="dietaryRestriction"
+            class="block text-gray-900 dark:text-gray-200 font-semibold mb-3 text-xl md:text-2xl">Dietary
+            Restrictions </label><span
+            class=" hs-tooltip-toggle text-xs mb-5 px-2 border border-black py-0.5 rounded-2xl bg-green-400  cursor-pointer ">Beta</span>
+          <span
+            class="  hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-sm md:text-base text-center font-medium text-white rounded-md shadow-sm dark:bg-slate-700"
+            role="tooltip">
+            This is a beta feature. <br> It may not work properly all the time.
+          </span>
+        </div>
+        <input type="text" id="dietaryRestriction"
+          class="w-full border  py-2 px-3 focus:outline-none focus:border-gray-800 dark:focus:border-gray-100 placeholder-gray-900 dark:placeholder-gray-200 dark:bg-gray-600 dark:text-gray-100  rounded-xl bg-gray-100"
+          placeholder="Dietary restrictions  (comma-separated)" />
+      </div>
+      <div class="flex items-center justify-between mb-4 ">
+        <select
+          class="w-36 md:w-56 border rounded-xl py-2 px-3 focus:outline-none bg-gray-100 focus:border-gray-500 dark:bg-gray-600 dark:text-gray-100 md:text-md "
+          aria-labelledby="sortOption" id="sortOption">
+          <option value="default">Sort by</option>
+          <option value="minutesAsc">Minutes (Low to High)</option>
+          <option value="minutesDesc">Minutes (High to Low)</option>
+          <option value="stepsAsc">Steps (Low to High)</option>
+          <option value="stepsDesc">Steps (High to Low)</option>
+          <option value="ingredientsAsc">Ingredients (Low to High)</option>
+          <option value="ingredientsDesc">Ingredients (High to Low)</option>
+        </select>
+        <button type="button" id="searchButton"
+          class="bg-[#00ED64] text-md font-semibold md:text-xl text-[#001E2B] py-2 px-8 rounded-xl hover:rounded-full focus:outline-none border border-[#001E2B]">
+          Search
+        </button>
+      </div>
+      <div class="helper-text-all flex justify-between pt-5">
+        <div></div>
+        <div class="text-base text-gray-700 dark:text-gray-400" id="helpText"></div>
+      </div>
+    </form>
+    <div id="placeholderDiv" class="items-center text-center mx-auto justify-center w-full   max-w-screen-xl">
+      <div class="  py-5 ">
+        ‎ ‎ ‎ ‎ ‎
+      </div>
+    </div>
+    <div id="loader" class="items-center text-center mx-auto justify-center w-full   max-w-screen-xl"
+      style="display: none;">
+      <ul class=" space-y-5  p-6  animate-pulse ">
+        <li class="w-full h-96 md:h-64 rounded-lg border border-gray-900 dark:border-gray-100 bg-gray-500 dark:bg-gray-900 "></li>
+        <li class="w-full h-96 md:h-64 rounded-lg border border-gray-900 dark:border-gray-100 bg-gray-500 dark:bg-gray-900 "></li>
+        <li class="w-full h-96 md:h-64 rounded-lg border border-gray-900 dark:border-gray-100 bg-gray-500 dark:bg-gray-900 "></li>
+        <li class="w-full h-96 md:h-64 rounded-lg border border-gray-900 dark:border-gray-100 bg-gray-500 dark:bg-gray-900 "></li>
+      </ul>
+    </div>
+    <div id="recipe-list" class="mt-5 px-6 items-center justify-center w-full mx-auto  max-w-screen-xl space-y-5"
+      style="display: block;">
+    </div>
+    <div class="mt-4  mb-10 flex justify-center " id="pagination"></div>
+    </div>
+  </main>
+  <div class="py-5 ">
+    ‎ ‎ ‎ ‎ ‎
+  </div>
+  <footer aria-label="Site Footer"
+    class="bg-gray-100 border-t border-gray-200 shadow md:p-6 dark:bg-gray-900 dark:border-gray-600 bottom-0 left-0">
+    <div class="relative mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8 lg:pt-24 items-center mt-5 ">
+      <div class="lg:flex lg:items-end lg:justify-between">
+        <div>
+          <div class="flex justify-center  lg:justify-start">
+            <a href="/"
+              class="text-gray-900 dark:text-gray-100  inline-flex items-center gap-4 text-3xl font-bold md:text-4xl lg:text-5xl font-sedgwick "
+              aria-label="Recipe Seeker">
+              <img class="w-16 h-16 lg:w-20 lg:h-20  "
+                src="/apple-touch-icon.svg" loading="lazy" alt="logo">
+              Recipe Seeker
+            </a>
+          </div>
+        </div>
+        <nav aria-label="Footer Nav" class="mt-12 lg:mt-0">
+          <ul class="mt-12 flex justify-center gap-6 md:gap-8">
+            <li>
+              <a target="_blank" rel="noopener noreferrer" href="https://www.facebook.com/SwastikDan"
+                aria-label="Vsit Facebook Profile of Swastik Dan" class="text-gray-400 hover:text-gray-500"><span
+                  class="sr-only">Facebook</span><svg xmlns="http://www.w3.org/2000/svg" width="25" height="25"
+                  fill="currentColor" class="bi bi-facebook" viewBox="0 0 16 16">
+                  <path
+                    d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z">
+                  </path>
+                </svg></a>
+            </li>
+            <li>
+              <a target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/swastikdan"
+                aria-label="Vsit Linkdin Profile of Swastik Dan" class="text-gray-400 hover:text-gray-500"><span
+                  class="sr-only">linkedin</span><svg xmlns="http://www.w3.org/2000/svg" width="25" height="25"
+                  fill="currentColor" class="bi bi-linkedin" viewBox="0 0 16 16">
+                  <path
+                    d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z">
+                  </path>
+                </svg></a>
+            </li>
+            <li>
+              <a target="_blank" rel="noopener noreferrer" href="https://github.com/Swastikdan"
+                aria-label="Vsit GIthub Profile of Swastik Dan" class="text-gray-400 hover:text-gray-500"><span
+                  class="sr-only">GitHub</span><svg xmlns="http://www.w3.org/2000/svg" width="25" height="25"
+                  fill="currentColor" class="bi bi-github" viewBox="0 0 16 16">
+                  <path
+                    d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z">
+                  </path>
+                </svg></a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <p class="mt-12 ">
+      </p>
+      <p class="mt-8 text-base  leading-6 lg:text-right text-center dark:text-white text-black ">Copyright © <span
+          id="year"></span>&nbsp;. &nbsp; Made with <span class="text-red-600">❤</span> By <a target=" _blank"
+          rel="noopener noreferrer" class="hover:underline hover:underline-offset-4"
+          href="https://www.linkedin.com/in/swastikdan" aria-label="Vsit Linkdin Profile of Swastik Dan">Swastik Dan
+        </a></p>
+    </div><a target=" _blank" rel="noopener noreferrer" class="hover:underline hover:underline-offset-4"
+      href="https://www.linkedin.com/in/swastikdan">
+    </a>
+  </footer>
+  <script src="/offline.js"></script>
+  <script src="./src/js/main.js"></script>
+  <script>console.log(secretConsoleMessage, 'color: #ff7e5f; font-size: 16px; font-weight: bold;');</script>
+  <script src="./src/js/darkmode.js"></script>
+  <script src="./src/js/preline.js"></script>
+  <script>
+    const yearElement = document.getElementById("year");
+    const currentYear = new Date().getFullYear();
+    yearElement.innerText = currentYear;
+    const backToTopButton = document.getElementById("back-to-top");
+    window.addEventListener("scroll", () => {
+      if (window.pageYOffset < 100) {
+        backToTopButton.classList.add("hidden");
+      } else {
+        backToTopButton.classList.remove("hidden");
+      }
+    });
+    backToTopButton.addEventListener("click", () => {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
+  </script>
+  <script>
+    const searchButton = document.getElementById("searchButton");
+    const myDiv = document.getElementById("placeholderDiv");
+    searchButton.addEventListener("click", () => {
+      myDiv.style.display = "none";
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,31 @@
+{
+    "short_name": "Recipe Seeker",
+    "name": "Recipe Seeker App",
+    "icons": [
+      {
+        "src": "/android-chrome-192x192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "src": "/android-chrome-512x512.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ],
+    "start_url": "/",
+    "background_color": "#fafafa",
+    "theme_color": "#fafafa",
+    "display": "standalone",
+    "orientation": "portrait",
+    "description": "A recipe search app that allows you to find and explore various recipes.",
+    "categories": ["food", "cooking"],
+    "lang": "en-US",
+    "serviceworker": {
+        "src": "/service-worker.js",
+        "scope": "/"
+    }
+    
+
+  }
+  
