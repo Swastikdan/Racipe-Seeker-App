@@ -1,6 +1,6 @@
+require('dotenv').config();
 const express = require('express');
 const { MongoClient, ObjectId } = require('mongodb');
-const basicAuth = require('express-basic-auth');
 const cors = require('cors');
 const compression = require('compression');
 const path = require('path');
@@ -17,43 +17,6 @@ const connectDB = async () => {
   }
   return dbClient;
 };
-const authenticateLogs = async (username, password, callback) => {
-  const expectedUsername = process.env.LOG_USERNAME;
-  const expectedPassword = process.env.LOG_PASSWORD;
-
-  if (username === expectedUsername && password === expectedPassword) {
-    callback(null, true);
-  } else {
-    callback(null, false);
-  }
-};
-app.use(async (req, res, next) => {
-  if (req.path.startsWith('/api/recipes')) {
-    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-    const timestamp = new Date().toISOString();
-    const requestLogMessage = `${timestamp} - IP: ${ip}, Method: ${req.method}, Path: ${req.path}, Query: ${JSON.stringify(req.query)}`;
-    const responseLogMessage = `${timestamp} - Response: ${res.statusCode >= 400 ? 'error' : 'ok'}`;
-
-    try {
-      const client = await connectDB();
-      const database = client.db('Racepies');
-      const collection = database.collection('Logs');
-
-      const logDocument = {
-        request: requestLogMessage,
-        response: responseLogMessage
-      };
-
-      await collection.insertOne(logDocument);
-    } catch (err) {
-      console.error('Error writing log to database:', err);
-    }
-
-    next();
-  } else {
-    next();
-  }
-});
 app.use('/src', express.static(path.join(__dirname, 'src')));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json()); 
@@ -134,31 +97,7 @@ app.get('/api/recipes/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-app.get('/api/logs', basicAuth({
-  authorizeAsync: true,
-  authorizer: authenticateLogs,
-  challenge: true,
-  unauthorizedResponse: 'Unauthorized'
-}), async (req, res) => {
-  try {
-    const client = await connectDB();
-    const database = client.db('Racepies');
-    const collection = database.collection('Logs');
-    
-    const logs = await collection.find().toArray();
-    
-    let logsText = '';
-    logs.forEach(log => {
-      logsText += log.request + '\n' + log.response + '\n\n';
-    });
-    
-    res.setHeader('Content-Type', 'text/plain');
-    res.send(logsText);
-  } catch (error) {
-    console.error('Error fetching logs:', error);
-    res.status(500).send('Internal server error');
-  }
-});
+
 app.use((req, res) => {
   res.status(404).sendFile(path.join(__dirname, '/404.html'));
 });
