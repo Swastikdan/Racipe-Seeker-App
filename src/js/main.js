@@ -183,7 +183,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       const response = await fetch(apiUrl);
       if (!response.ok) {
-        // If the response is not ok, throw an error with the status code
         throw new Error(response.status);
       }
       const data = await response.json();
@@ -215,10 +214,18 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error fetching data:", error);
       if (error.message) {
         // If the error is an HTTP error, display the status code
-        displayError(error.message);
+        recipeList.innerHTML = `
+          <div class="error-message">
+            Error: ${error.message}
+          </div>
+        `;
       } else {
         // If the error is not an HTTP error, display a generic error message
-        displayError("Something went wrong");
+        recipeList.innerHTML = `
+          <div class="error-message">
+            Something went wrong
+          </div>
+        `;
       }
     }
   });
