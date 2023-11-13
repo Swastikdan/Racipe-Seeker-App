@@ -168,7 +168,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const dietaryQuery = sanitizeInput(dietaryInput.value.trim());
     const sortOption = sortOptionSelect.value;
     const finalDietaryQuery = dietaryQuery.split(/\s*,\s*/).filter(term => term !== "");
-    console.log(finalDietaryQuery);
     try {
       const loader = document.getElementById("loader");
       loader.style.display = "block";
@@ -183,6 +182,10 @@ document.addEventListener("DOMContentLoaded", () => {
         apiUrl += `&ingredient=${encodeURIComponent(ingredientQuery)}`;
       }
       const response = await fetch(apiUrl);
+      if (!response.ok) {
+        // If the response is not ok, throw an error with the status code
+        throw new Error(response.status);
+      }
       const data = await response.json();
       loader.style.display = "none";
       recipeList.style.display = "block";
@@ -210,7 +213,13 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     } catch (error) {
       console.error("Error fetching data:", error);
-      displayError("Something went wrong");
+      if (error.message) {
+        // If the error is an HTTP error, display the status code
+        displayError(error.message);
+      } else {
+        // If the error is not an HTTP error, display a generic error message
+        displayError("Something went wrong");
+      }
     }
   });
   const sortData = (data, sortOption) => {
@@ -259,16 +268,31 @@ document.addEventListener("DOMContentLoaded", () => {
   const sanitizeInput = (input) => {
     return input.replace(/[<>&"']/g, "");
   };
-  const displayError = (message) => {
+  const displayError = (statusCode) => {
+    let message = '';
+    switch (statusCode) {
+      case 500:
+        message = 'Internal Server Error';
+        break;
+      case 503:
+        message = 'Service Unavailable';
+        break;
+      case 504:
+        message = 'Gateway Timeout';
+        break;
+      default:
+        message = 'An error occurred';
+    }
+
     recipeList.innerHTML = `
-     <article
-            class="rounded-lg border text-center border-gray-900 bg-gray-100 dark:bg-gray-900 p-4 shadow-sm transition hover:shadow-xl sm:p-6 font-mono"
-          >
-              <h3 class="mt-0.5 text-lg font-bold text-gray-900 dark:text-white capitalize">
-              ${message}
-              </h3>  
-          </article>
-        `;
+      <article
+        class="rounded-lg border text-center border-gray-900 bg-gray-100 dark:bg-gray-900 p-4 shadow-sm transition hover:shadow-xl sm:p-6 font-mono"
+      >
+        <h3 class="mt-0.5 text-lg font-bold text-gray-900 dark:text-white capitalize">
+          ${message}
+        </h3>  
+      </article>
+    `;
   };
 });
 const secretConsoleMessage = `
