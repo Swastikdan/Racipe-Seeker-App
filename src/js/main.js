@@ -188,6 +188,10 @@ document.addEventListener("DOMContentLoaded", () => {
       );
       const response = await Promise.race([fetchPromise, timeoutPromise]);
       if (!response.ok) {
+        loader.style.display = "none";
+        recipeList.style.display = "block";
+        paginationDiv.style.display = "block";
+        helpTextSpan.style.display = "block";
         throw new Error(response.status);
       }
       const data = await response.json();
@@ -197,6 +201,10 @@ document.addEventListener("DOMContentLoaded", () => {
       helpTextSpan.style.display = "block";
       // Rest of your code
     } catch (error) {
+      loader.style.display = "none";
+      recipeList.style.display = "block";
+      paginationDiv.style.display = "block";
+      helpTextSpan.style.display = "block";
       console.error("Error fetching data:", error);
       if (error.message === "Request timed out") {
         displayError("It's taking a long time to get your data. Bare with us.");
