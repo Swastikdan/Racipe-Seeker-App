@@ -20,6 +20,10 @@
     "orientation": "portrait",
     "description": "A recipe search app that allows you to find and explore various recipes.",
     "categories": ["food", "cooking"],
+    "serviceworker": {
+      "src": "/service-worker.js",
+      "scope": "/"
+  },
     "lang": "en-US"
 
     

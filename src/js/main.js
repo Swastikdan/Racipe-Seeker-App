@@ -215,7 +215,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 60000);
       } else if (error.message) {
         // If the error is an HTTP error, display the status code
-        displayError(`Error: ${error.message}`);
+        console.log(`${error.message}`);
+        displayError("Something went wrong");
       } else {
         // If the error is not an HTTP error, display a generic error message
         displayError("Something went wrong");
