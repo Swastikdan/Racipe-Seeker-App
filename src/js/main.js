@@ -168,6 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const dietaryQuery = sanitizeInput(dietaryInput.value.trim());
     const sortOption = sortOptionSelect.value;
     const finalDietaryQuery = dietaryQuery.split(/\s*,\s*/).filter(term => term !== "");
+   
     try {
       const loader = document.getElementById("loader");
       loader.style.display = "block";
@@ -181,7 +182,11 @@ document.addEventListener("DOMContentLoaded", () => {
       if (ingredientQuery) {
         apiUrl += `&ingredient=${encodeURIComponent(ingredientQuery)}`;
       }
-      const response = await fetch(apiUrl);
+      const fetchPromise = fetch(apiUrl);
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out")), 20000)
+      );
+      const response = await Promise.race([fetchPromise, timeoutPromise]);
       if (!response.ok) {
         throw new Error(response.status);
       }
@@ -190,42 +195,22 @@ document.addEventListener("DOMContentLoaded", () => {
       recipeList.style.display = "block";
       paginationDiv.style.display = "block";
       helpTextSpan.style.display = "block";
-      if (Array.isArray(data)) {
-        const filteredData = data.filter((recipe) => {
-          if (finalDietaryQuery.length === 0) {
-            return true;
-          }
-          for (const dietaryItem of finalDietaryQuery) {
-            if (recipe.ingredients.includes(dietaryItem)) {
-              return false;
-            }
-          }
-          return true;
-        });
-        fetchedData = sortData(filteredData, sortOption);
-        totalResults = fetchedData.length;
-        currentPage = 1;
-        displayPaginatedRecipes();
-        displayPagination(totalResults);
-      } else {
-        displayError("Invalid response data");
-      }
+      // Rest of your code
     } catch (error) {
       console.error("Error fetching data:", error);
-      if (error.message) {
+      if (error.message === "Request timed out") {
+        displayError("It's taking a long time to get your data. Bare with us.");
+        setTimeout(() => {
+          if (!response.ok) {
+            displayError("Something went wrong");
+          }
+        }, 60000);
+      } else if (error.message) {
         // If the error is an HTTP error, display the status code
-        recipeList.innerHTML = `
-          <div class="error-message">
-            Error: ${error.message}
-          </div>
-        `;
+        displayError(`Error: ${error.message}`);
       } else {
         // If the error is not an HTTP error, display a generic error message
-        recipeList.innerHTML = `
-          <div class="error-message">
-            Something went wrong
-          </div>
-        `;
+        displayError("Something went wrong");
       }
     }
   });
@@ -275,31 +260,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const sanitizeInput = (input) => {
     return input.replace(/[<>&"']/g, "");
   };
-  const displayError = (statusCode) => {
-    let message = '';
-    switch (statusCode) {
-      case 500:
-        message = 'Internal Server Error';
-        break;
-      case 503:
-        message = 'Service Unavailable';
-        break;
-      case 504:
-        message = 'Gateway Timeout';
-        break;
-      default:
-        message = 'An error occurred';
-    }
-
+  const displayError = (message) => {
     recipeList.innerHTML = `
-      <article
-        class="rounded-lg border text-center border-gray-900 bg-gray-100 dark:bg-gray-900 p-4 shadow-sm transition hover:shadow-xl sm:p-6 font-mono"
-      >
-        <h3 class="mt-0.5 text-lg font-bold text-gray-900 dark:text-white capitalize">
-          ${message}
-        </h3>  
-      </article>
-    `;
+     <article
+            class="rounded-lg border text-center border-gray-900 bg-gray-100 dark:bg-gray-900 p-4 shadow-sm transition hover:shadow-xl sm:p-6 font-mono"
+          >
+              <h3 class="mt-0.5 text-lg font-bold text-gray-900 dark:text-white capitalize">
+              ${message}
+              </h3>  
+          </article>
+        `;
   };
 });
 const secretConsoleMessage = `
