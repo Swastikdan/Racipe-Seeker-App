@@ -17,6 +17,12 @@ const port = process.env.PORT || 3000;
 // Set MongoDB URI from environment variable
 const uri = process.env.MONGODB_URI;
 
+// Check if MongoDB URI is available
+if (!uri) {
+  console.error('Error: MongoDB URI not found in environment variables. Please check your configuration.');
+  process.exit(1); // Exit the process with an error code
+}
+
 // Enable CORS and compression middleware
 app.use(cors());
 app.use(compression());
@@ -30,33 +36,34 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Connect to MongoDB database and return Raw_Racepies collection
 const connectDB = async () => {
-  const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-  await client.connect();
-  return client.db('Racepies').collection('Raw_Racepies');
+  try {
+    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+    await client.connect();
+    console.log('Connected to MongoDB');
+    return client.db('Racepies').collection('Raw_Racepies');
+  } catch (error) {
+    console.error('Error connecting to MongoDB:', error);
+    throw error; // Rethrow the error to be caught by the calling function
+  }
 };
 
 // Serve index.html file at root URL
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '/', 'index.html'));
-});
-
-// Serve index.html file at /index.html URL
-app.get('/index.html', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // Serve recipe-details.html file at /recipe-details.html URL
 app.get('/recipe-details.html', (req, res) => {
-  res.sendFile(__dirname + '/recipe-details.html');
+  res.sendFile(path.join(__dirname, 'recipe-details.html'));
 });
 
 // Redirect /recipe-details URL to /recipe-details.html URL
 app.get('/recipe-details', (req, res) => {
-  res.sendFile(path.join(__dirname, '/', 'recipe-details.html'));
+  res.sendFile(path.join(__dirname, 'recipe-details.html'));
 });
 
 // Serve recipes matching search and ingredient queries at /api/recipes URL
-app.get('/api/recipes', async (req, res) => {
+app.get('/api/recipes', async (req, res, next) => {
   try {
     const collection = await connectDB();
 
@@ -96,13 +103,12 @@ app.get('/api/recipes', async (req, res) => {
     const recipes = await collection.aggregate(pipeline).toArray();
     res.json(recipes);
   } catch (error) {
-    console.error('Error fetching recipes:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    next(error);
   }
 });
 
 // Serve recipe with specified ID at /api/recipes/:id URL
-app.get('/api/recipes/:id', async (req, res) => {
+app.get('/api/recipes/:id', async (req, res, next) => {
   try {
     const collection = await connectDB();
     const recipeId = req.params.id;
@@ -113,23 +119,41 @@ app.get('/api/recipes/:id', async (req, res) => {
     }
     res.json(recipe);
   } catch (error) {
-    console.error('Error fetching recipe by ID:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    next(error);
   }
 });
 
-// Serve 404 error page for all other URLs
-app.use((req, res) => {
-  res.status(404).sendFile(path.join(__dirname, '/404.html'));
-});
-
-// Serve 500 error page for unhandled errors
+// Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Error:', err);
-  res.status(500).sendFile(path.join(__dirname, '/500.html'));
+  res.status(500).json({ error: 'Internal Server Error' });
+});
+
+// Serve 404 error page for all other URLs
+app.use((req, res, next) => {
+  res.status(404).sendFile(path.join(__dirname, '404.html'));
 });
 
 // Start server listening on specified port
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+const startServer = async () => {
+  try {
+    await connectDB(); // Ensure database connection is established before starting the server
+    const server = app.listen(port, () => {
+      console.log(`Server is running on port ${port}`);
+    });
+
+    // Handle server shutdown gracefully
+    process.on('SIGTERM', async () => {
+      server.close(async () => {
+        console.log('Server closed');
+        // Close MongoDB connection when the server is closed
+        await client.close();
+        console.log('MongoDB connection closed');
+      });
+    });
+  } catch (error) {
+    console.error('Error starting server:', error);
+  }
+};
+
+startServer();
