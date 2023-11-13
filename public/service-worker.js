@@ -5,9 +5,17 @@ const CACHE_FILES = ['offline.html','index.html','recipe-details.html','/src/js/
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(CACHE_FILES);
-    })
+    caches.open(CACHE_NAME)
+      .then((cache) => {
+        return cache.keys().then((existingRequests) => {
+          const existingUrls = existingRequests.map((request) => request.url);
+          const filesToCache = CACHE_FILES.filter((file) => !existingUrls.includes(location.origin + file));
+          return cache.addAll(filesToCache)
+            .catch((error) => {
+              console.error('Failed to cache:', error);
+            });
+        });
+      })
   );
 });
 
