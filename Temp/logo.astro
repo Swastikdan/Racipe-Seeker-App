@@ -1,0 +1,17 @@
+---
+import { Image } from "astro:assets";
+---
+
+<a href="/" class="sm:order-1 flex-none text-xl font-bold dark:text-white">
+  <div class="flex items-center space-x-2">
+    <Image
+      src="/icon.svg"
+      alt="Logo"
+      width="40"
+      height="50"
+      loading="eager" 
+      class="p-1 bg-white dark:bg-gray-600 rounded-lg"
+    />
+    <span> Recipe Seeker</span>
+  </div>
+</a>
