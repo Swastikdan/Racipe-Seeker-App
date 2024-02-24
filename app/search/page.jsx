@@ -1,6 +1,7 @@
+"use client";
 import SearchForm from "@/components/searchform";
 import SearchResult from "@/components/searchresult";
-
+import { Suspense } from "react";
 export default function page() {
   
 
@@ -8,7 +9,8 @@ export default function page() {
     <>
     <main className="min-h-screen">
    <SearchForm />
-   <SearchResult /></main>
+    <Suspense>
+   <SearchResult /></Suspense></main>
     </>
   );
 }
