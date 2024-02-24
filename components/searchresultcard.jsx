@@ -5,10 +5,7 @@ export default function SearchResultCard({recipe}) {
     <>
       <Link
         key={recipe._id}
-        href={`/recipes/${recipe._id}/${encodeURIComponent(recipe.name).replace(
-          /%20/g,
-          "-",
-        )}`}
+        href={`/recipes/${recipe._id}`}
         className="group relative my-5 block rounded-xl"
       >
         <span className="absolute inset-0 rounded-xl border-2 border-dashed border-black dark:border-white"></span>
@@ -47,7 +44,7 @@ export default function SearchResultCard({recipe}) {
                 recipe.tags
                   .slice(0, 5)
                   .map((tag) => (
-                    <span className="inline-flex items-center gap-x-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-xs font-light text-gray-800 dark:bg-white/10 dark:text-white">
+                    <span  className="inline-flex items-center gap-x-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-xs font-light text-gray-800 dark:bg-white/10 dark:text-white">
                       {tag}
                     </span>
                   ))}

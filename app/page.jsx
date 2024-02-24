@@ -2,6 +2,11 @@
 import Hero from "@/components/hero";
 import RecepiesPreview from "@/components/recepiespreview";
 
+export const metadata = {
+  title: "Recipe DB || An OpenSource Recipe Database",
+  description:
+    "Recipe DB is an open web application, crafted with Node.js and Express.js, that provides access to a diverse database of recipes from around the world. It leverages MongoDB for efficient storage and retrieval of recipe data.",
+};
 
 export default function Home() {
   return (

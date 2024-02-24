@@ -54,9 +54,7 @@ export default function RecepiesPreview() {
           <Link
             key={recipe._id}
             className="group flex flex-col justify-center rounded-xl p-4 ring-1 ring-gray-100 hover:bg-gray-50 dark:ring-gray-900 dark:hover:bg-slate-800 dark:focus:outline-none md:p-7"
-            href={`/recipes/${recipe._id}/${encodeURIComponent(
-              recipe.name,
-            ).replace(/%20/g, "-")}`}
+            href={`/recipes/${recipe._id}`}
           >
             <div className="">
               <h3 className=" text-lg font-semibold capitalize  group-hover:text-gray-700 dark:group-hover:text-gray-300">

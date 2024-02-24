@@ -66,7 +66,7 @@ export default function SearchForm() {
     >
       <div className="mb-4">
         <label
-          for="search"
+          htmlFor="search"
           className="mb-3 block text-xl font-semibold text-gray-900 dark:text-gray-200 md:text-2xl"
         >
           Search Recipe
@@ -79,7 +79,7 @@ export default function SearchForm() {
             value={name}
             onChange={handleNameChange}
             disabled={isNameDisabled}
-            className="w-full  rounded-xl bg-gray-100 px-3  py-2 font-light  placeholder-gray-900 dark:bg-gray-600  dark:placeholder-gray-200 "
+            className="w-full  rounded-xl bg-gray-100 px-3  py-2.5 text-sm placeholder-gray-900  dark:bg-gray-600 dark:placeholder-gray-200  sm:text-base "
             placeholder="Enter a recipe name"
           />
           {name && (
@@ -109,7 +109,7 @@ export default function SearchForm() {
             value={ingredient}
             onChange={handleIngredientChange}
             disabled={isIngredientDisabled}
-            className="w-full rounded-xl bg-gray-100 px-3  py-2 font-light  placeholder-gray-900 dark:bg-gray-600 dark:placeholder-gray-200"
+            className="w-full rounded-xl bg-gray-100 px-3  py-2.5 text-sm placeholder-gray-900  dark:bg-gray-600 dark:placeholder-gray-200 sm:text-base"
             placeholder="Enter a recipe name"
           />
           {ingredient && (
@@ -130,8 +130,8 @@ export default function SearchForm() {
           <Tooltip>
             <div className=" flex space-x-2">
               <label
-                for="dietaryRestriction"
-                className="mb-3 block  font-semibold text-gray-900 dark:text-gray-200"
+                htmlFor="dietaryRestriction"
+                className="mb-3 block text-lg  font-semibold text-gray-900 dark:text-gray-200"
               >
                 Dietary Restrictions
               </label>
@@ -154,7 +154,7 @@ export default function SearchForm() {
             type="text"
             value={dietaryRestriction}
             onChange={(e) => setDietaryRestriction(e.target.value)}
-            className="w-full  rounded-xl bg-gray-100 px-3  py-2 font-light  placeholder-gray-900 dark:bg-gray-600  dark:placeholder-gray-200 "
+            className="w-full  rounded-xl bg-gray-100 px-3  py-2.5 text-sm placeholder-gray-900  dark:bg-gray-600 dark:placeholder-gray-200  sm:text-base "
             placeholder="Dietary restrictions  (comma-separated)"
           />
           {dietaryRestriction && (
@@ -171,7 +171,7 @@ export default function SearchForm() {
       </div>
       <div className="mb-4 flex items-center justify-between ">
         <select
-          className="w-36 cursor-pointer rounded-xl border bg-gray-100 px-3 py-2  font-light focus:border-gray-500 focus:outline-none dark:bg-gray-600 dark:text-gray-100 md:w-64 "
+          className="w-36 cursor-pointer rounded-xl border bg-gray-100 px-3 py-2  focus:border-gray-500 focus:outline-none dark:bg-gray-600 dark:text-gray-100 md:w-64 "
           aria-labelledby="sortOption"
           value={sortOption}
           onChange={(e) => setSortOption(e.target.value)}
@@ -265,7 +265,7 @@ export default function SearchForm() {
 //     >
 //       <div className="mb-4">
 //         <label
-//           for="search"
+//           htmlFor="search"
 //           className="mb-3 block text-xl font-semibold text-gray-900 dark:text-gray-200 md:text-2xl"
 //         >
 //           Search Recipe
@@ -327,7 +327,7 @@ export default function SearchForm() {
 //       <div className="mb-4">
 //         <div className="hs-tooltip flex space-x-2 [--trigger:click]">
 //           <label
-//             for="dietaryRestriction"
+//             htmlFor="dietaryRestriction"
 //             className="mb-3 block text-xl font-semibold text-gray-900 dark:text-gray-200 md:text-2xl"
 //           >
 //             Dietary Restrictions{" "}
