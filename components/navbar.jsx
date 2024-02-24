@@ -22,6 +22,9 @@ export default function Navbar() {
             <Link href="/api" className="mx-5">
               <Button className="px-6 uppercase">api</Button>
             </Link>
+            {/* <Link href="/contribute" className="mx-5">
+              <Button className="px-6 uppercase">contribute</Button>
+            </Link> */}
             <ThemeSwitch />
           </div>
         </nav>

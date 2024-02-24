@@ -3,11 +3,11 @@ import Link from "next/link";
 import Image from "next/image";
 export default function Footer() {
   return (
-    <footer className="max-w-screen-xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
-      <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-5 text-center">
+    <footer className="mx-auto max-w-screen-xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+      <div className="grid grid-cols-1 items-center gap-5 text-center md:grid-cols-2">
         <div>
           <Link
-            className="sm:order-1 flex-none text-xl md:text-2xl font-semibold dark:text-white flex items-center gap-x-2"
+            className="flex flex-none items-center gap-x-2 text-xl font-semibold dark:text-white sm:order-1 md:text-2xl"
             href="/"
           >
             <Image src="/icon.svg" alt="logo" width={40} height={30} />
@@ -15,8 +15,8 @@ export default function Footer() {
           </Link>
         </div>
 
-        <ul className="text-center md:text-end capitalize">
-          <li className="inline-block relative pe-8 last:pe-0 last-of-type:before:hidden before:absolute before:top-1/2 before:end-3 before:-translate-y-1/2 before:content-['/'] before:text-gray-300 dark:before:text-gray-600">
+        <ul className="text-center capitalize md:text-end">
+          <li className="relative inline-block pe-8 before:absolute before:end-3 before:top-1/2 before:-translate-y-1/2 before:text-gray-300 before:content-['/'] last:pe-0 last-of-type:before:hidden dark:before:text-gray-600">
             <Link
               className="inline-flex gap-x-2 text-sm text-gray-500 hover:text-gray-800 dark:text-gray-500 dark:hover:text-gray-200 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
               href="/"
@@ -24,7 +24,7 @@ export default function Footer() {
               home
             </Link>
           </li>
-          <li className="inline-block relative pe-8 last:pe-0 last-of-type:before:hidden before:absolute before:top-1/2 before:end-3 before:-translate-y-1/2 before:content-['/'] before:text-gray-300 dark:before:text-gray-600">
+          <li className="relative inline-block pe-8 before:absolute before:end-3 before:top-1/2 before:-translate-y-1/2 before:text-gray-300 before:content-['/'] last:pe-0 last-of-type:before:hidden dark:before:text-gray-600">
             <Link
               className="inline-flex gap-x-2 text-sm text-gray-500 hover:text-gray-800 dark:text-gray-500 dark:hover:text-gray-200 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
               href="/api"
@@ -32,7 +32,7 @@ export default function Footer() {
               api
             </Link>
           </li>
-          <li className="inline-block relative pe-8 last:pe-0 last-of-type:before:hidden before:absolute before:top-1/2 before:end-3 before:-translate-y-1/2 before:content-['/'] before:text-gray-300 dark:before:text-gray-600">
+          <li className="relative inline-block pe-8 before:absolute before:end-3 before:top-1/2 before:-translate-y-1/2 before:text-gray-300 before:content-['/'] last:pe-0 last-of-type:before:hidden dark:before:text-gray-600">
             <Link
               className="inline-flex gap-x-2 text-sm text-gray-500 hover:text-gray-800 dark:text-gray-500 dark:hover:text-gray-200 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
               href="https://github.com/Swastikdan/recipe-api"

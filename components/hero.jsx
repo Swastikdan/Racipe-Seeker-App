@@ -1,6 +1,7 @@
 import React from "react";
 import { Search } from "lucide-react";
 import Link from "next/link";
+import HeropageSearch from "./heropagesearch";
 export default function Hero() {
   return (
     <>
@@ -14,7 +15,7 @@ export default function Hero() {
         </p>
         <section className="w-full max-w-5xl flex flex-col justify-center mx-auto">
           <div className="flex justify-center px-5 pt-5 md:pt-10">
-            <form action="/search" className="w-full flex ">
+            {/* <form action="/search" className="w-full flex ">
               <div class="relative w-full">
                 <label for="search" class="sr-only">
                   Search
@@ -32,7 +33,8 @@ export default function Hero() {
               <button className="hidden sm:block px-4 py-2 rounded-lg ml-2 font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90">
                 Search
               </button>
-            </form>
+            </form> */}
+            <HeropageSearch />
           </div>
           <span className="flex justify-end text-end">
             <Link

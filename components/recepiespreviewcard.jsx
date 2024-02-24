@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 const apiurl = process.env.NEXT_PUBLIC_apiurl;
-
 export async function getRandomRecepies() {
   const apiquary = apiurl + "?n=9";
   const res = await fetch(apiquary, {
@@ -11,20 +10,18 @@ export async function getRandomRecepies() {
   return res.json();
 }
 
-export default function RecepiesPreview() {
+export default async function RecepiesPreviewCard() {
+   const data = await getRandomRecepies();
   const [recepies, setRecepies] = useState([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const data = await getRandomRecepies();
+
       if (data.success == true) {
         setRecepies(data.recipes);
       } else {
         console.error("Failed to fetch recipes");
       }
-    };
 
-    fetchData();
   }, []);
   if (!recepies.length) {
     return (
