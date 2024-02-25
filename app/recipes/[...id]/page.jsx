@@ -1,19 +1,23 @@
 "use client";
-const apiurl = process.env.NEXT_PUBLIC_apiurl;
 import React, { useEffect, useState } from "react";
 import Recipe from "@/components/recipe";
-export default function RecipePage({ params }) {
+const apiurl = process.env.NEXT_PUBLIC_apiurl;
+
+const RecipePage = ({ params }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [recipes, setRecipes] = useState(null);
   const recipeId = params.id;
   const apiQuery = `${apiurl}/search/${recipeId}`;
+
   useEffect(() => {
-    async function fetchRecipe() {
+    const fetchRecipe = async () => {
       try {
         const response = await fetch(apiQuery, { cache: "no-store" });
 
-        if (!response.ok) throw new Error("Failed to fetch data");
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
 
         const data = await response.json();
 
@@ -28,11 +32,10 @@ export default function RecipePage({ params }) {
         setError(error.message);
         setLoading(false);
       }
-    }
+    };
 
     fetchRecipe();
   }, []);
-
 
   if (loading) {
     return (
@@ -43,9 +46,11 @@ export default function RecipePage({ params }) {
   }
 
   if (error) {
-    return <div className="w-full py-10 text-center  font-light sm:text-lg">
-            <h3>Something went wrong </h3>
-            </div>;
+    return (
+      <div className="w-full py-10 text-center  font-light sm:text-lg">
+        <h3>Something went wrong </h3>
+      </div>
+    );
   }
 
   return (
@@ -55,4 +60,6 @@ export default function RecipePage({ params }) {
       </main>
     </>
   );
-}
+};
+
+export default RecipePage;

@@ -13,7 +13,7 @@ export default function Recipe({ recipes }) {
       </div>
       <div className="py-5 ">
         <p className="pb-5 text-sm font-light text-gray-800 dark:text-gray-400 sm:text-base">
-          {recipes.description || "Not available"}
+          {recipes.description.charAt(0).toUpperCase() + recipes.description.slice(1) || "Not available"}
         </p>
 
         <span class="ms-1 inline-flex items-center gap-2 gap-x-1 rounded-full bg-gray-100 px-2 py-1 font-light leading-4 dark:text-gray-900 sm:text-lg">
