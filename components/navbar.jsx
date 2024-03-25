@@ -19,7 +19,7 @@ export default function Navbar() {
             <span>RecipeDB</span>
           </Link>
           <div className="sm:order-3 flex items-center gap-x-2">
-            <Link href="/api" className="mx-5">
+            <Link target="_blank" href="https://github.com/Swastikdan/recipe-api" className="mx-5">
               <Button className="px-6 uppercase">api</Button>
             </Link>
             {/* <Link href="/contribute" className="mx-5">
